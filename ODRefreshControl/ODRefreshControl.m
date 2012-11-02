@@ -68,9 +68,6 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
         _activity.center = CGPointMake(floor(self.frame.size.width / 2), floor(self.frame.size.height / 2));
         _activity.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         _activity.alpha = 0;
-        if ([_activity respondsToSelector:@selector(startAnimating)]) {
-            [(UIActivityIndicatorView *)_activity startAnimating];
-        }
         [self addSubview:_activity];
         
         _refreshing = NO;
@@ -115,6 +112,24 @@ static inline CGFloat lerp(CGFloat a, CGFloat b, CGFloat p)
 {
     super.enabled = enabled;
     _shapeLayer.hidden = !self.enabled;
+}
+
+- (void) setRefreshing:(BOOL)refreshing
+{
+    if (_refreshing != refreshing) {
+        _refreshing = refreshing;
+        if (_refreshing) {
+            if ([_activity respondsToSelector:@selector(startAnimating)]) {
+                [(UIActivityIndicatorView *)_activity startAnimating];
+            }
+        }
+        else
+        {
+            if ([_activity respondsToSelector:@selector(stopAnimating)]) {
+                [(UIActivityIndicatorView *)_activity stopAnimating];
+            }
+        }
+    }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
